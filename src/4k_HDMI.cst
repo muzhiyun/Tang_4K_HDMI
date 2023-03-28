@@ -1,0 +1,22 @@
+//Copyright (C)2014-2022 Gowin Semiconductor Corporation.
+//All rights reserved. 
+//File Title: Physical Constraints file
+//GOWIN Version: 1.9.8.09 Education
+//Part Number: GW1NR-LV9QN88PC6/I5
+//Device: GW1NR-9C
+//Created Time: Sat 03 11 21:30:57 2023
+
+IO_LOC "led" 10;
+IO_PORT "led" IO_TYPE=LVCMOS18 PULL_MODE=UP DRIVE=8;
+IO_LOC "sys_resetn" 14;
+IO_PORT "sys_resetn" PULL_MODE=UP;
+IO_LOC "sys_clk" 45;
+IO_PORT "sys_clk" IO_TYPE=LVCMOS33 PULL_MODE=UP;
+IO_LOC "tmds_d_p[0]" 30,29;
+IO_PORT "tmds_d_p[0]" PULL_MODE=NONE DRIVE=8;
+IO_LOC "tmds_d_p[1]" 32,31;
+IO_PORT "tmds_d_p[1]" PULL_MODE=NONE DRIVE=8;
+IO_LOC "tmds_d_p[2]" 35,34;
+IO_PORT "tmds_d_p[2]" PULL_MODE=NONE DRIVE=8;
+IO_LOC "tmds_clk_p" 28,27;
+IO_PORT "tmds_clk_p" PULL_MODE=NONE DRIVE=8;
