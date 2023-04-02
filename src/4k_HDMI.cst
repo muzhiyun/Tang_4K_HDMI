@@ -8,7 +8,7 @@
 
 IO_LOC "uart0_txd" 40;
 IO_PORT "uart0_txd" PULL_MODE=NONE DRIVE=8;
-IO_LOC "led" 17;
+IO_LOC "led" 10;
 IO_PORT "led" IO_TYPE=LVCMOS18 PULL_MODE=UP DRIVE=8;
 IO_LOC "sys_resetn" 14;
 IO_PORT "sys_resetn" PULL_MODE=UP;
@@ -24,5 +24,5 @@ IO_LOC "tmds_clk_p" 28,27;
 IO_PORT "tmds_clk_p" PULL_MODE=NONE DRIVE=8;
 IO_LOC "uart0_rxd" 39;
 IO_PORT "uart0_rxd" PULL_MODE=UP;
-IO_LOC "gpio[0]" 10;
-IO_PORT "gpio[0]" IO_TYPE=LVCMOS18 PULL_MODE=UP DRIVE=8;
+//IO_LOC "gpio[0]" 10;
+//IO_PORT "gpio[0]" IO_TYPE=LVCMOS18 PULL_MODE=UP DRIVE=8;

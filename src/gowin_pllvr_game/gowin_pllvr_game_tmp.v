@@ -2,17 +2,15 @@
 //All rights reserved.
 //File Title: Template file for instantiation
 //GOWIN Version: V1.9.8.10
-//Part Number: GW1NSR-LV4CMG64PC7/I6
+//Part Number: GW1NSR-LV4CQN48PC6/I5
 //Device: GW1NSR-4C
-//Created Time: Tue Dec 06 14:45:32 2022
+//Created Time: Sun Apr 02 18:14:35 2023
 
 //Change the instance name and port connections to the signal names
 //--------Copy here to design--------
 
-    Gowin_PLLVR your_instance_name(
+    Gowin_PLLVR_Game your_instance_name(
         .clkout(clkout_o), //output clkout
-        .clkoutp(clkoutp_o), //output clkoutp
-        .clkoutd(clkoutd_o), //output clkoutd
         .clkin(clkin_i) //input clkin
     );
 

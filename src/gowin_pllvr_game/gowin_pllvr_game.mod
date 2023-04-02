@@ -5,9 +5,9 @@
 -part_number GW1NSR-LV4CQN48PC6/I5
 
 
--mod_name Gowin_PLLVR
--file_name gowin_pllvr
--path C:/Users/MuZhi/Desktop/zynq/4k/game_body_12/game_body_12/src/gowin_pllvr/
+-mod_name Gowin_PLLVR_Game
+-file_name gowin_pllvr_game
+-path C:/Users/MuZhi/Desktop/zynq/4k/game_body_12/game_body_12/src/gowin_pllvr_game/
 -type PLL
 -pllvr true
 -file_type vlg
@@ -15,16 +15,16 @@
 -dyn_idiv_sel false
 -idiv_sel 9
 -dyn_fbdiv_sel false
--fbdiv_sel 53
+-fbdiv_sel 8
 -dyn_odiv_sel false
--odiv_sel 4
+-odiv_sel 32
 -dyn_da_en true
 -rst_sig false
 -rst_sig_p false
 -pll_reg false
 -fclkin 27
 -clkfb_sel 0
--en_lock true
+-en_lock false
 -clkout_bypass false
 -clkout_ft_dir 1
 -en_clkoutp false

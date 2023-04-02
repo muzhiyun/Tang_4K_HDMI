@@ -1,10 +1,10 @@
 //Copyright (C)2014-2022 Gowin Semiconductor Corporation.
 //All rights reserved.
 //File Title: IP file
-//GOWIN Version: V1.9.8.09 Education
+//GOWIN Version: V1.9.8.10
 //Part Number: GW1NSR-LV4CQN48PC6/I5
 //Device: GW1NSR-4C
-//Created Time: Tue Mar 28 20:50:54 2023
+//Created Time: Sun Apr 02 19:35:18 2023
 
 module Gowin_PLLVR (clkout, lock, clkin);
 
@@ -42,11 +42,11 @@ PLLVR pllvr_inst (
 
 defparam pllvr_inst.FCLKIN = "27";
 defparam pllvr_inst.DYN_IDIV_SEL = "false";
-defparam pllvr_inst.IDIV_SEL = 3;
+defparam pllvr_inst.IDIV_SEL = 8;
 defparam pllvr_inst.DYN_FBDIV_SEL = "false";
-defparam pllvr_inst.FBDIV_SEL = 54;
+defparam pllvr_inst.FBDIV_SEL = 52;
 defparam pllvr_inst.DYN_ODIV_SEL = "false";
-defparam pllvr_inst.ODIV_SEL = 2;
+defparam pllvr_inst.ODIV_SEL = 4;
 defparam pllvr_inst.PSDA_SEL = "0000";
 defparam pllvr_inst.DYN_DA_EN = "true";
 defparam pllvr_inst.DUTYDA_SEL = "1000";

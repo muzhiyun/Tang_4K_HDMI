@@ -2,18 +2,18 @@
 //All rights reserved.
 //File Title: IP file
 //GOWIN Version: V1.9.8.10
-//Part Number: GW1NSR-LV4CMG64PC7/I6
+//Part Number: GW1NSR-LV4CQN48PC6/I5
 //Device: GW1NSR-4C
-//Created Time: Tue Dec 06 14:45:32 2022
+//Created Time: Sun Apr 02 18:14:35 2023
 
-module Gowin_PLLVR_empu (clkout, clkoutp, clkoutd, clkin);
+module Gowin_PLLVR_Game (clkout, clkin);
 
 output clkout;
-output clkoutp;
-output clkoutd;
 input clkin;
 
 wire lock_o;
+wire clkoutp_o;
+wire clkoutd_o;
 wire clkoutd3_o;
 wire gw_vcc;
 wire gw_gnd;
@@ -24,8 +24,8 @@ assign gw_gnd = 1'b0;
 PLLVR pllvr_inst (
     .CLKOUT(clkout),
     .LOCK(lock_o),
-    .CLKOUTP(clkoutp),
-    .CLKOUTD(clkoutd),
+    .CLKOUTP(clkoutp_o),
+    .CLKOUTD(clkoutd_o),
     .CLKOUTD3(clkoutd3_o),
     .RESET(gw_gnd),
     .RESET_P(gw_gnd),
@@ -40,13 +40,13 @@ PLLVR pllvr_inst (
     .VREN(gw_vcc)
 );
 
-defparam pllvr_inst.FCLKIN = "50";
+defparam pllvr_inst.FCLKIN = "27";
 defparam pllvr_inst.DYN_IDIV_SEL = "false";
-defparam pllvr_inst.IDIV_SEL = 0;
+defparam pllvr_inst.IDIV_SEL = 8;
 defparam pllvr_inst.DYN_FBDIV_SEL = "false";
-defparam pllvr_inst.FBDIV_SEL = 1;
+defparam pllvr_inst.FBDIV_SEL = 7;
 defparam pllvr_inst.DYN_ODIV_SEL = "false";
-defparam pllvr_inst.ODIV_SEL = 8;
+defparam pllvr_inst.ODIV_SEL = 32;
 defparam pllvr_inst.PSDA_SEL = "0000";
 defparam pllvr_inst.DYN_DA_EN = "true";
 defparam pllvr_inst.DUTYDA_SEL = "1000";
@@ -56,11 +56,11 @@ defparam pllvr_inst.CLKOUT_DLY_STEP = 0;
 defparam pllvr_inst.CLKOUTP_DLY_STEP = 0;
 defparam pllvr_inst.CLKFB_SEL = "internal";
 defparam pllvr_inst.CLKOUT_BYPASS = "false";
-defparam pllvr_inst.CLKOUTP_BYPASS = "true";
-defparam pllvr_inst.CLKOUTD_BYPASS = "true";
+defparam pllvr_inst.CLKOUTP_BYPASS = "false";
+defparam pllvr_inst.CLKOUTD_BYPASS = "false";
 defparam pllvr_inst.DYN_SDIV_SEL = 2;
 defparam pllvr_inst.CLKOUTD_SRC = "CLKOUT";
 defparam pllvr_inst.CLKOUTD3_SRC = "CLKOUT";
 defparam pllvr_inst.DEVICE = "GW1NSR-4C";
 
-endmodule //Gowin_PLLVR_empu 
+endmodule //Gowin_PLLVR_Game

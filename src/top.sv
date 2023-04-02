@@ -1,7 +1,7 @@
 module top (
     input sys_clk,
     input sys_resetn,
-
+    
 ////  video clocks
 //    input clk_pixel,
 //    input clk_5x_pixel,
@@ -10,8 +10,19 @@ module top (
     //output logic [2:0] tmds,
     //output logic tmds_clock
 
+
+    //for gameboy
+    //input wire clk,
+    //input wire reset, 
+	input wire[1:0]btn,   //按钮
+	input wire[1:0]sw,  //拨码开关
+	input wire str,       //游戏控制
+
+
+
     output led,  
-    inout [15:0] gpio,
+    //inout [1:0] gpio,
+    //inout led,
     input uart0_rxd,
 	output uart0_txd,
 
@@ -20,17 +31,30 @@ module top (
 	output       tmds_clk_p,
 	output [2:0] tmds_d_n,
 	output [2:0] tmds_d_p
+	
+    //PSRAM Interface
+//      init_calib,   //Initialized flag
+//      O_psram_ck,
+//      O_psram_ck_n,
+//      O_psram_cs_n,
+//      O_psram_reset_n,
+//      IO_psram_dq,
+//      IO_psram_rwds
 
-    //PSRAM
-//    output init_calib,
-//    output [1:0] O_psram_ck,
-//    output [1:0] O_psram_ck_n,
-//    output [1:0] O_psram_cs_n,
-//    output [1:0] O_psram_reset_n,
-//    inout [15:0] IO_psram_dq,
-//    inout [1:0] IO_psram_rwds
+
 
 );
+
+
+//    PSRAM
+//    output init_calib;
+//    output [1:0] O_psram_ck;
+//    output [1:0] O_psram_ck_n;
+//    output [1:0] O_psram_cs_n;
+//    output [1:0] O_psram_reset_n;
+//    inout [15:0] IO_psram_dq;
+//    inout [1:0] IO_psram_rwds;
+
 //logic [2:0] tmds;
 //logic tmds_clock;
 
@@ -70,9 +94,19 @@ wire mclk ;             //mcu clock = 50MHz
 wire psram_memory_clk;  //psram memory clock = 100MHz
 wire psram_base_clk;    //psram base clock = 50MHz
 
+
+//// 720p, 371.25 = 27 * 55 / 4, 371.25/5 = 74.25 (720p pixel clock)
+//// 480p, 159 = 27 * 53 / 9, 159/5 = 31.8 
+//https://juj.github.io/gowin_fpga_code_generators/pll_calculator.html
 Gowin_PLLVR u_pll(
     .clkout(clk_pixel_x5), //output clkout
     .lock(pll_lock), //output lock
+    .clkin(sys_clk) //input clkin
+);
+
+wire game_clk;
+Gowin_PLLVR_Game u_pllvr_game(
+    .clkout(game_clk), //output clkout
     .clkin(sys_clk) //input clkin
 );
 
@@ -82,12 +116,25 @@ Gowin_CLKDIV u_div_5(
         .resetn(sys_resetn & pll_lock) //input resetn
 );
 
+//reg [32:0] cnt_clk;     
+//assign led = (cnt_clk < 26'd12_500_000) ? 1'b1 : 1'b0;
+//always @ (posedge clk_pixel or negedge sys_resetn) begin
+//    if(!sys_resetn)                  
+//        cnt_clk <=26'd0;
+//    else if(cnt_clk < 26'd25_000_000)
+//        cnt_clk <= cnt_clk + 1'b1;    
+//    else
+//        cnt_clk <= 26'd0;     
+//end
+
 //Gowin_PLLVR_empu u_Gowin_PLLVR (
 //    .clkout(psram_memory_clk),  //psram_memory_clk 100MHz
 //    .clkoutp(psram_base_clk),   //psram_base_clk 50MHz
 //    .clkoutd(mclk),             //mcu clock 50MHz
 //    .clkin(sys_clk)             //input clkin
 //);
+
+
 
 //AHB PSRAM instantiation
 //PSRAM Memory Interface
@@ -119,33 +166,11 @@ Gowin_CLKDIV u_div_5(
 //  .IO_psram_rwds(IO_psram_rwds)
 //);
 
-Gowin_EMPU_Top empu_u(
-    .sys_clk(sys_clk), //input sys_clk
-    .gpio(gpio), //inout [15:0] gpio
-    .uart0_rxd(uart0_rxd), //input uart0_rxd
-    .uart0_txd(uart0_txd), //output uart0_txd
-//    .master_hclk(master_hclk_o), //output master_hclk
-//    .master_hrst(master_hrst_o), //output master_hrst
-//    .master_hsel(master_hsel_o), //output master_hsel
-//    .master_haddr(master_haddr_o), //output [31:0] master_haddr
-//    .master_htrans(master_htrans_o), //output [1:0] master_htrans
-//    .master_hwrite(master_hwrite_o), //output master_hwrite
-//    .master_hsize(master_hsize_o), //output [2:0] master_hsize
-//    .master_hburst(master_hburst_o), //output [2:0] master_hburst
-//    .master_hprot(master_hprot_o), //output [3:0] master_hprot
-//    .master_memattr(master_memattr_o), //output [1:0] master_memattr
-//    .master_exreq(master_exreq_o), //output master_exreq
-//    .master_hmaster(master_hmaster_o), //output [3:0] master_hmaster
-//    .master_hwdata(master_hwdata_o), //output [31:0] master_hwdata
-//    .master_hmastlock(master_hmastlock_o), //output master_hmastlock
-//    .master_hreadymux(master_hreadymux_o), //output master_hreadymux
-//    .master_hauser(master_hauser_o), //output master_hauser
-//    .master_hwuser(master_hwuser_o), //output [3:0] master_hwuser
-//    .master_hrdata(master_hrdata_i), //input [31:0] master_hrdata
-//    .master_hreadyout(master_hreadyout_i), //input master_hreadyout
-//    .master_hresp(master_hresp_i), //input master_hresp
-//    .master_exresp(master_exresp_i), //input master_exresp
-//    .master_hruser(master_hruser_i), //input [2:0] master_hruser
+//Gowin_EMPU_Top empu_u(
+//    .sys_clk(sys_clk), //input sys_clk
+//    .gpio(led), //inout [15:0] gpio
+//    .uart0_rxd(uart0_rxd), //input uart0_rxd
+//    .uart0_txd(uart0_txd), //output uart0_txd
       //----AHB2 Master----//
 //    .master_hclk(master_hclk),
 //    .master_hrst(master_hrst),
@@ -156,8 +181,8 @@ Gowin_EMPU_Top empu_u(
 //    .master_hsize(master_hsize),
 //    .master_hburst(master_hburst),
 //    .master_hprot(master_hprot),
-//    .master_memattr(master_hmemattr),
-//    .master_exreq(master_hexreq),
+//    .master_hmemattr(master_hmemattr),
+//    .master_hexreq(master_hexreq),
 //    .master_hmaster(master_hmaster),
 //    .master_hwdata(master_hwdata),
 //    .master_hmastlock(master_hmastlock),
@@ -167,30 +192,22 @@ Gowin_EMPU_Top empu_u(
 //    .master_hrdata(master_hrdata),
 //    .master_hreadyout(master_hreadyout),
 //    .master_hresp(master_hresp),
-//    .master_exresp(1'b0),
+//    .master_hexresp(1'b0),
 //    .master_hruser(3'b000),
-    .reset_n(sys_resetn) //input reset_n
-);
+//    .reset_n(sys_resetn) //input reset_n
+//);
 
 
 /********************************Test CLK Start****************************************/
-reg [32:0] cnt_clk;              
+         
 //reg [32:0] cnt_pixel;  
 //reg [32:0] cnt_pixel5 = 0;              
 
-assign led = (cnt_clk < 26'd13_500_000) ? 1'b1 : 1'b0;
+
 //assign led[1] = (cnt_pixel < 26'd500) ? 1'b1 : 1'b0;
 //assign led[2] = (cnt_pixel5 < 26'd500) ? 1'b0 : 1'b1;
 
 
-always @ (posedge sys_clk or negedge sys_resetn) begin
-    if(!sys_resetn)                  
-        cnt_clk <=26'd0;
-    else if(cnt_clk < 26'd27_000_000)
-        cnt_clk <= cnt_clk + 1'b1;    
-    else
-        cnt_clk <= 26'd0;     
-end
 
 //always @ (posedge clk_pixel or negedge sys_resetn) begin
 //    if(!sys_resetn)                  
@@ -255,22 +272,55 @@ logic [9:0] cx, cy, screen_start_x, screen_start_y, frame_width, frame_height, s
 
 logic [23:0] rgb = 24'hff0000;   //24'hffffff;   // R G B
 
+
+//output wire [1:0]LED,     //显示游戏分数
+wire hsync, vsync; //VGA信号
+wire [2:0] game_rgb;       //颜色
+
+
+game_graph_top u_game_graph_top (
+    .clk(clk_pixel),          //25Mhz
+    .reset(!sys_resetn), 
+    .btn(btn), 
+    .sw(sw), 
+    .str(str), 
+    .hsync(hsync), 
+    .vsync(vsync), 
+    .rgb(game_rgb),
+    .hdmi_pix_x(cx),
+    .hdmi_pix_y(cy),
+    .led(led)
+);
+
+
+
 //Video Test Pattern
 // Border test (left = red, top = green, right = blue, bottom = blue, fill = black)
 always @(posedge clk_pixel)
+begin
 //  rgb <= {cx == 0 ? ~8'd0 : 8'd0, cy == 0 ? ~8'd0 : 8'd0, cx == screen_width - 1'd1 || cy == screen_width - 1'd1 ? ~8'd0 : 8'd0};
-    if (cy < 240 )
-       rgb = 24'hff0000;
-    else if (cy < 480 )
-       rgb = 24'h00ff00;
-    else
-       rgb = 24'h0000ff; 
-
-
-
+	case(game_rgb)
+        3'b111:
+            rgb = 24'hffffff;
+        3'b110:
+            rgb = 24'hffff00;
+        3'b101:
+            rgb = 24'hff00ff;
+        3'b100:
+            rgb = 24'hff0000;
+        3'b011:
+            rgb = 24'h00ffff;
+        3'b010:
+            rgb = 24'h00ff00;
+        3'b001:
+            rgb = 24'h0000ff;
+        3'b000:
+            rgb = 24'h000000;
+    endcase
+end
 
 // 1280x720 @ 59.94Hz
-hdmi #(.VIDEO_ID_CODE(4), .VIDEO_REFRESH_RATE(59.94), .AUDIO_RATE(48000), .AUDIO_BIT_WIDTH(16)) hdmi(
+hdmi #(.VIDEO_ID_CODE(1), .VIDEO_REFRESH_RATE(59.94), .AUDIO_RATE(48000), .AUDIO_BIT_WIDTH(16)) hdmi(
   .clk_pixel_x5(clk_pixel_x5),
   .clk_pixel(clk_pixel),
   .clk_audio(clk_audio),
