@@ -135,7 +135,7 @@ assign ball_y_next = (refr_tick)?ball_y_reg + y_v_reg : ball_y_reg;
 
 always@(posedge clk or negedge reset)
 begin
-	if(reset)
+	if(!reset)
 		begin
 		 bar_x_reg <= MAX_X/2 - bar_x_size/2;
 		 ball_x_reg <= MAX_X/2 - ball_size/2 ;
@@ -158,7 +158,7 @@ end
 //球的运动（根据位置或撞击判断状态）
 always@(posedge clk or negedge reset)
 	begin
-		if(reset)
+		if(!reset)
 			begin
 				move_state <= s0;
 			end

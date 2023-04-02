@@ -5,14 +5,14 @@
     <Version>5</Version>
     <Device name="GW1NSR-4C" pn="GW1NSR-LV4CQN48PC6/I5">gw1nsr4c-000</Device>
     <FileList>
-        <File path="src/VGA_synchronization.v" type="file.verilog" enable="1"/>
+        <File path="src/VGA_synchronization.v" type="file.verilog" enable="0"/>
         <File path="src/audio_clock_regeneration_packet.sv" type="file.verilog" enable="1"/>
         <File path="src/audio_info_frame.sv" type="file.verilog" enable="1"/>
         <File path="src/audio_sample_packet.sv" type="file.verilog" enable="1"/>
         <File path="src/auxiliary_video_information_info_frame.sv" type="file.verilog" enable="1"/>
         <File path="src/dynamic_range_and_mastering.sv" type="file.verilog" enable="1"/>
         <File path="src/extended_metadata_packet.sv" type="file.verilog" enable="1"/>
-        <File path="src/game_graph_top.v" type="file.verilog" enable="1"/>
+        <File path="src/game_graph_top.v" type="file.verilog" enable="0"/>
         <File path="src/game_graph_top_test.v" type="file.verilog" enable="0"/>
         <File path="src/game_process.v" type="file.verilog" enable="0"/>
         <File path="src/game_process2.v" type="file.verilog" enable="1"/>

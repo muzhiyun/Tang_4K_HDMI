@@ -278,21 +278,21 @@ wire hsync, vsync; //VGA信号
 wire [2:0] game_rgb;       //颜色
 
 
-game_graph_top u_game_graph_top (
-    .clk(clk_pixel),          //25Mhz
-    .reset(!sys_resetn), 
-    .btn(btn), 
-    .sw(sw), 
-    .str(str), 
-    .hsync(hsync), 
-    .vsync(vsync), 
-    .rgb(game_rgb),
-    .hdmi_pix_x(cx),
-    .hdmi_pix_y(cy),
-    .led(led)
-);
-
-
+//game_graph_top u_game_graph_top (
+//    .clk(clk_pixel),          //25Mhz
+//    .reset(!sys_resetn), 
+//    .btn(btn), 
+//    .sw(sw), 
+//    .str(str), 
+//    .hsync(hsync), 
+//    .vsync(vsync), 
+//    .rgb(game_rgb),
+//    .hdmi_pix_x(cx),
+//    .hdmi_pix_y(cy),
+//    .led(led)
+//);
+wire graph_on;  
+game_process2 graph_unit(.clk(clk_pixel), .reset(sys_resetn),.pix_x(cx), .pix_y(cy), .btn(btn),.sw(sw),.str(str),.graph_on(graph_on), .graph_rgb(game_rgb));
 
 //Video Test Pattern
 // Border test (left = red, top = green, right = blue, bottom = blue, fill = black)
