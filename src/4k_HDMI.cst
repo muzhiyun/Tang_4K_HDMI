@@ -6,7 +6,7 @@
 //Device: GW1NSR-4C
 //Created Time: Tue 03 28 22:34:54 2023
 
-IO_LOC "uart0_txd" 40;
+IO_LOC "uart0_txd" 39;
 IO_PORT "uart0_txd" PULL_MODE=NONE DRIVE=8;
 IO_LOC "led" 10;
 IO_PORT "led" IO_TYPE=LVCMOS18 PULL_MODE=UP DRIVE=8;
@@ -22,7 +22,17 @@ IO_LOC "tmds_d_p[2]" 35,34;
 IO_PORT "tmds_d_p[2]" PULL_MODE=NONE DRIVE=8;
 IO_LOC "tmds_clk_p" 28,27;
 IO_PORT "tmds_clk_p" PULL_MODE=NONE DRIVE=8;
-IO_LOC "uart0_rxd" 39;
+IO_LOC "uart0_rxd" 46;
 IO_PORT "uart0_rxd" PULL_MODE=UP;
-//IO_LOC "gpio[0]" 10;
-//IO_PORT "gpio[0]" IO_TYPE=LVCMOS18 PULL_MODE=UP DRIVE=8;
+IO_LOC "gpio[0]" 40;
+IO_PORT "gpio[0]" IO_TYPE=LVCMOS18 PULL_MODE=UP DRIVE=8;
+IO_LOC "gpio[1]" 41;
+IO_PORT "gpio[1]" IO_TYPE=LVCMOS18 PULL_MODE=UP DRIVE=8;
+IO_LOC "gpio[2]" 42;
+IO_PORT "gpio[2]" IO_TYPE=LVCMOS18 PULL_MODE=UP DRIVE=8;
+IO_LOC "gpio[3]" 43;
+IO_PORT "gpio[3]" IO_TYPE=LVCMOS18 PULL_MODE=UP DRIVE=8;
+IO_LOC "gpio[4]" 44;
+IO_PORT "gpio[4]" IO_TYPE=LVCMOS18 PULL_MODE=UP DRIVE=8;
+
+

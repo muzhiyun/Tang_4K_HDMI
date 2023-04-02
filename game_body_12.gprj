@@ -6,6 +6,7 @@
     <Device name="GW1NSR-4C" pn="GW1NSR-LV4CQN48PC6/I5">gw1nsr4c-000</Device>
     <FileList>
         <File path="src/VGA_synchronization.v" type="file.verilog" enable="0"/>
+        <File path="src/ahb_multiple.v" type="file.verilog" enable="1"/>
         <File path="src/audio_clock_regeneration_packet.sv" type="file.verilog" enable="1"/>
         <File path="src/audio_info_frame.sv" type="file.verilog" enable="1"/>
         <File path="src/audio_sample_packet.sv" type="file.verilog" enable="1"/>
@@ -17,7 +18,7 @@
         <File path="src/game_process.v" type="file.verilog" enable="0"/>
         <File path="src/game_process2.v" type="file.verilog" enable="1"/>
         <File path="src/gowin_clkdiv/gowin_clkdiv.v" type="file.verilog" enable="1"/>
-        <File path="src/gowin_empu/gowin_empu.v" type="file.verilog" enable="0"/>
+        <File path="src/gowin_empu/gowin_empu.v" type="file.verilog" enable="1"/>
         <File path="src/gowin_pllvr/gowin_pllvr.v" type="file.verilog" enable="1"/>
         <File path="src/gowin_pllvr_game/gowin_pllvr_game.v" type="file.verilog" enable="1"/>
         <File path="src/hdmi.sv" type="file.verilog" enable="1"/>

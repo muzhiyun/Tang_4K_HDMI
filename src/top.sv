@@ -14,14 +14,14 @@ module top (
     //for gameboy
     //input wire clk,
     //input wire reset, 
-	input wire[1:0]btn,   //按钮
-	input wire[1:0]sw,  //拨码开关
-	input wire str,       //游戏控制
+//	input wire[1:0]btn,   //按钮
+//	input wire[1:0]sw,  //拨码开关
+//	input wire str,       //游戏控制
 
 
-
+    //for mcu
     output led,  
-    //inout [1:0] gpio,
+    inout [6:0] gpio,
     //inout led,
     input uart0_rxd,
 	output uart0_txd,
@@ -91,8 +91,8 @@ wire master_hreadyout;
 wire master_hresp;
 
 wire mclk ;             //mcu clock = 50MHz
-wire psram_memory_clk;  //psram memory clock = 100MHz
-wire psram_base_clk;    //psram base clock = 50MHz
+//wire psram_memory_clk;  //psram memory clock = 100MHz
+//wire psram_base_clk;    //psram base clock = 50MHz
 
 
 //// 720p, 371.25 = 27 * 55 / 4, 371.25/5 = 74.25 (720p pixel clock)
@@ -105,7 +105,7 @@ Gowin_PLLVR u_pll(
 );
 
 wire game_clk;
-Gowin_PLLVR_Game u_pllvr_game(
+Gowin_PLLVR_Game u_pllvr_game(      //for mcu 78Mhz
     .clkout(game_clk), //output clkout
     .clkin(sys_clk) //input clkin
 );
@@ -166,36 +166,55 @@ Gowin_CLKDIV u_div_5(
 //  .IO_psram_rwds(IO_psram_rwds)
 //);
 
-//Gowin_EMPU_Top empu_u(
-//    .sys_clk(sys_clk), //input sys_clk
-//    .gpio(led), //inout [15:0] gpio
-//    .uart0_rxd(uart0_rxd), //input uart0_rxd
-//    .uart0_txd(uart0_txd), //output uart0_txd
+Gowin_AHB_Multiple u_ahb_multiple
+(
+	.AHB_HRDATA(master_hrdata),
+	.AHB_HREADY(master_hreadyout),//ready signal, slave to MCU master, 1'b1
+	.AHB_HRESP(master_hresp),//respone signal, slave to MCU master
+	.AHB_HTRANS(master_htrans),
+	.AHB_HBURST(master_hburst),
+	.AHB_HPROT(master_hprot),
+	.AHB_HSIZE(master_hsize),
+	.AHB_HWRITE(master_hwrite),
+	.AHB_HMASTLOCK(master_hmastlock),
+	.AHB_HMASTER(master_hmaster),
+	.AHB_HADDR(master_haddr[11:0]),
+	.AHB_HWDATA(master_hwdata),
+	.AHB_HSEL(master_hsel),
+	.AHB_HCLK(master_hclk),
+	.AHB_HRESETn(master_hrst)
+);
+
+Gowin_EMPU_Top empu_u(
+    .sys_clk(game_clk), //input sys_clk
+    .gpio(gpio), //inout [15:0] gpio
+    .uart0_rxd(uart0_rxd), //input uart0_rxd
+    .uart0_txd(uart0_txd), //output uart0_txd
       //----AHB2 Master----//
-//    .master_hclk(master_hclk),
-//    .master_hrst(master_hrst),
-//    .master_hsel(master_hsel),
-//    .master_haddr(master_haddr),
-//    .master_htrans(master_htrans),
-//    .master_hwrite(master_hwrite),
-//    .master_hsize(master_hsize),
-//    .master_hburst(master_hburst),
-//    .master_hprot(master_hprot),
-//    .master_hmemattr(master_hmemattr),
-//    .master_hexreq(master_hexreq),
-//    .master_hmaster(master_hmaster),
-//    .master_hwdata(master_hwdata),
-//    .master_hmastlock(master_hmastlock),
-//    .master_hreadymux(master_hreadymux),
-//    .master_hauser(master_hauser),
-//    .master_hwuser(master_hwuser),
-//    .master_hrdata(master_hrdata),
-//    .master_hreadyout(master_hreadyout),
-//    .master_hresp(master_hresp),
-//    .master_hexresp(1'b0),
-//    .master_hruser(3'b000),
-//    .reset_n(sys_resetn) //input reset_n
-//);
+    .master_hclk(master_hclk),
+    .master_hrst(master_hrst),
+    .master_hsel(master_hsel),
+    .master_haddr(master_haddr),
+    .master_htrans(master_htrans),
+    .master_hwrite(master_hwrite),
+    .master_hsize(master_hsize),
+    .master_hburst(master_hburst),
+    .master_hprot(master_hprot),
+    .master_hmemattr(master_hmemattr),
+    .master_hexreq(master_hexreq),
+    .master_hmaster(master_hmaster),
+    .master_hwdata(master_hwdata),
+    .master_hmastlock(master_hmastlock),
+    .master_hreadymux(master_hreadymux),
+    .master_hauser(master_hauser),
+    .master_hwuser(master_hwuser),
+    .master_hrdata(master_hrdata),
+    .master_hreadyout(master_hreadyout),
+    .master_hresp(master_hresp),
+    .master_hexresp(1'b0),
+    .master_hruser(3'b000),
+    .reset_n(sys_resetn) //input reset_n
+);
 
 
 /********************************Test CLK Start****************************************/
