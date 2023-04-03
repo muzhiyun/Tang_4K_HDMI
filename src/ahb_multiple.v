@@ -17,7 +17,11 @@ module Gowin_AHB_Multiple
 	input	wire	[31:0]  AHB_HWDATA,
 	input	wire			AHB_HSEL,
 	input	wire			AHB_HCLK,
-	input	wire			AHB_HRESETn
+	input	wire			AHB_HRESETn,
+    output   wire[1:0]       mcu_btn,   //按钮
+    output   wire[1:0]       mcu_sw,  //拨码开关
+    output   wire            mcu_str,       //游戏控制
+    output   wire             led
 );
 
 //The AHB BUS is always ready
@@ -129,7 +133,7 @@ begin
         ahb_rdata = 32'hFFFFFFFF;
     end
 end
-
+assign led = read_enable ? 1'b1 : 1'b0;
 assign AHB_HRDATA = ahb_rdata;
 
 Gowin_Multiple u_multiple
@@ -142,7 +146,11 @@ Gowin_Multiple u_multiple
 	.Multiplier		(Multiplier	),
 	
 	.Done_Sig		(cmd_finished_status),
-	.Product		(wire_multiple_result)
+	.Product		(wire_multiple_result),
+    .u_btn(mcu_btn),
+    .u_sw(mcu_sw),
+    .u_str(mcu_str)
+    
 );
 
 endmodule
@@ -157,7 +165,10 @@ module Gowin_Multiple
 	input	wire	[7:0]	Multiplier,
 	
 	output	wire			Done_Sig,
-	output	wire	[15:0]	Product
+	output	wire	[15:0]	Product,
+    output   wire[1:0]      u_btn,   //按钮
+    output   wire[1:0]      u_sw,  //拨码开关
+    output   wire           u_str       //游戏控制
 );
 
 reg [1:0] i;
@@ -166,7 +177,11 @@ reg [7:0] Mer;
 reg [15:0] Temp;
 reg isNeg;
 reg isDone;
-	
+
+reg [1:0] mbtn;
+reg u_str;
+
+
 always @(posedge CLK or negedge RSTn)
 begin
 	if(~RSTn)
@@ -178,39 +193,50 @@ begin
 			isDone <= 1'b0;
 			isNeg <= 1'b0;
 		end
-	else if(Statr_Sig)
-		case (i)
-			2'd0:
-			begin
-				isNeg <= Multiplicand[7] ^ Multiplier[7];//Get neg or int
-				Mcand <= Multiplicand[7] ?(~Multiplicand + 1'b1):Multiplicand;
-				Mer   <= Multiplier[7] ?(~Multiplier + 1'b1):Multiplier;
-				Temp  <= 16'd0;
-				i	  <= i + 1'b1;
-			end
-			2'd1:
-			begin
-				if(Mer == 0) i<= i + 1'b1;
-				else 
-					begin
-						Temp <= Temp + Mcand;
-						Mer	 <= Mer  - 1'b1;
-					end
-			end
-			2'd2:
-			begin
-				isDone <= 1'b1;
-				i <= i + 1'b1;
-			end
-			2'd3:
-			begin
-				isDone <= 1'b0;
-				i 	   <= 2'd0;
-			end
-		endcase
+	else  begin
+            
+            mbtn[0] <= Multiplicand[7] ;
+            mbtn[1] <= Multiplicand[6] ;
+            isDone <= 1'b1;
+
+        end
+//		case (i)
+//			2'd0:
+//			begin    
+//				isNeg <= Multiplicand[7] ^ Multiplier[7];//Get neg or int
+//				Mcand <= Multiplicand[7] ?(~Multiplicand + 1'b1):Multiplicand;
+//				Mer   <= Multiplier[7] ?(~Multiplier + 1'b1):Multiplier;
+//                mbtn[0] <= Multiplicand[7] ;
+//                mbtn[1] <= Multiplicand[6] ;
+//				Temp  <= 16'd0;
+//				i	  <= i + 1'b1;
+//			end
+//			2'd1:
+//			begin
+//				if(Mer == 0) i<= i + 1'b1;
+//				else 
+//					begin
+//						Temp <= Temp + Mcand;
+//						Mer	 <= Mer  - 1'b1;
+//					end
+//			end
+//			2'd2:
+//			begin
+//                 mbtn[0] <= Multiplicand[7] ;
+//                mbtn[1] <= Multiplicand[6] ;
+//				isDone <= 1'b1;
+//				i <= i + 1'b1;
+//			end
+//			2'd3:
+//			begin
+//				isDone <= 1'b0;
+//				i 	   <= 2'd0;
+//			end
+//		endcase
 end
 
 assign Done_Sig = isDone;
 assign Product  = isNeg?(~Temp + 1'b1):Temp;
-	
+assign u_btn = mbtn;
+assign u_str = 1'b1;
 endmodule

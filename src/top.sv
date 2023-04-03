@@ -94,6 +94,10 @@ wire mclk ;             //mcu clock = 50MHz
 //wire psram_memory_clk;  //psram memory clock = 100MHz
 //wire psram_base_clk;    //psram base clock = 50MHz
 
+//for game_boy
+wire[1:0]btn ;//= 2'b11;   //按钮
+wire[1:0]sw ;//= 2'b11;  //拨码开关
+wire str ;//= 1'b1;       //游戏控制
 
 //// 720p, 371.25 = 27 * 55 / 4, 371.25/5 = 74.25 (720p pixel clock)
 //// 480p, 159 = 27 * 53 / 9, 159/5 = 31.8 
@@ -182,15 +186,21 @@ Gowin_AHB_Multiple u_ahb_multiple
 	.AHB_HWDATA(master_hwdata),
 	.AHB_HSEL(master_hsel),
 	.AHB_HCLK(master_hclk),
-	.AHB_HRESETn(master_hrst)
+	.AHB_HRESETn(master_hrst),
+    .mcu_btn(btn),
+    .mcu_sw(sw),
+    .mcu_str(str),
+.led(led)
 );
+
+
 
 Gowin_EMPU_Top empu_u(
     .sys_clk(game_clk), //input sys_clk
     .gpio(gpio), //inout [15:0] gpio
     .uart0_rxd(uart0_rxd), //input uart0_rxd
     .uart0_txd(uart0_txd), //output uart0_txd
-      //----AHB2 Master----//
+     // ----AHB2 Master----//
     .master_hclk(master_hclk),
     .master_hrst(master_hrst),
     .master_hsel(master_hsel),
