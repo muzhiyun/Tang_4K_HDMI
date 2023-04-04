@@ -22,7 +22,7 @@ parameter width = 40;
 parameter length = 60;
 wire [2:0]block_on;
 //挡板定义
-parameter bar_x_size1 = 50;
+parameter bar_x_size1 = 240;
 parameter bar_x_size2 = 40;
 parameter bar_x_size3 = 30;
 parameter bar_y_b = 357;

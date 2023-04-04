@@ -179,7 +179,7 @@ reg isNeg;
 reg isDone;
 
 reg [1:0] mbtn;
-reg u_str;
+reg mstr;
 
 
 always @(posedge CLK or negedge RSTn)
@@ -192,11 +192,15 @@ begin
 			Temp <= 16'd0;
 			isDone <= 1'b0;
 			isNeg <= 1'b0;
+            mbtn[0] <= 1'b0;
+            mbtn[1] <= 1'b0;
+            mstr    <= 1'b0;
 		end
 	else  begin
             
-            mbtn[0] <= Multiplicand[7] ;
+            mbtn[0] <= Multiplicand[7] ;        //左右方向键
             mbtn[1] <= Multiplicand[6] ;
+            mstr    <= Multiplier[7] ;       //暂停开始键
             isDone <= 1'b1;
 
         end
@@ -238,5 +242,5 @@ end
 assign Done_Sig = isDone;
 assign Product  = isNeg?(~Temp + 1'b1):Temp;
 assign u_btn = mbtn;
-assign u_str = 1'b1;
+assign u_str = mstr;
 endmodule

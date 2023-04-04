@@ -97,7 +97,7 @@ wire mclk ;             //mcu clock = 50MHz
 //for game_boy
 wire[1:0]btn ;//= 2'b11;   //按钮
 wire[1:0]sw ;//= 2'b11;  //拨码开关
-wire str ;//= 1'b1;       //游戏控制
+wire str ;// = 1'b0;       //游戏控制
 
 //// 720p, 371.25 = 27 * 55 / 4, 371.25/5 = 74.25 (720p pixel clock)
 //// 480p, 159 = 27 * 53 / 9, 159/5 = 31.8 
@@ -328,6 +328,12 @@ game_process2 graph_unit(.clk(clk_pixel), .reset(sys_resetn),.pix_x(cx), .pix_y(
 always @(posedge clk_pixel)
 begin
 //  rgb <= {cx == 0 ? ~8'd0 : 8'd0, cy == 0 ? ~8'd0 : 8'd0, cx == screen_width - 1'd1 || cy == screen_width - 1'd1 ? ~8'd0 : 8'd0};
+//    if(cx == 12'd0 || cx == 12'd639)
+//        rgb = 24'hffffff;
+//    else if(cy == 12'd0 || cy == 12'd479)
+//        rgb = 24'hffffff;
+//    else
+//        rgb = 24'h000000;
 	case(game_rgb)
         3'b111:
             rgb = 24'hffffff;
