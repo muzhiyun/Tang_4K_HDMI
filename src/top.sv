@@ -257,29 +257,28 @@ Gowin_EMPU_Top empu_u(
 /********************************Test CLK End****************************************/
 
 // audio stuff
-logic [10:0] audio_divider;
+//logic [10:0] audio_divider;
 logic clk_audio;
 
-localparam AUDIO_RATE=48000;
-localparam CLKFRQ = 74250;
+//localparam AUDIO_RATE=48000;
+//localparam CLKFRQ = 74250;
 
-always_ff@(posedge clk_pixel) 
-begin
-    if (audio_divider != CLKFRQ * 1000 / AUDIO_RATE / 2 - 11'd1) 
-        audio_divider++; //generated from clk_pixel 27.0000MHz/281=48042,70Hz ; 27.0000MHz/306=44117,64Hz
-    else begin 
-        clk_audio <= ~clk_audio; 
-        audio_divider <= 0; 
-    end
-end
+//always_ff@(posedge clk_pixel) 
+//begin
+//    if (audio_divider != CLKFRQ * 1000 / AUDIO_RATE / 2 - 11'd1) 
+//        audio_divider++; //generated from clk_pixel 27.0000MHz/281=48042,70Hz ; 27.0000MHz/306=44117,64Hz
+//    else begin 
+//        clk_audio <= ~clk_audio; 
+//        audio_divider <= 0; 
+//    end
+//end
 
 logic [15:0] audio_sample_word [1:0]; //= '{16'haaaa, 16'haaaa};
 
 //Audio Test Data
-always @(posedge clk_audio)
-// audio_sample_word <= {16'haaaa,16'haaaa};
-  audio_sample_word <= '{audio_sample_word[1] + 16'h1111, audio_sample_word[0] - 16'h1111};
-
+//always @(posedge clk_audio)
+ //audio_sample_word <= {16'haaaa,16'haaaa};
+// audio_sample_word <= {audio_sample_word[1] + 16'h1111, audio_sample_word[0] - 16'h1111};
 
 /********************************Test CLK Start****************************************/
 //reg [32:0] cnt_audio_clk;  
