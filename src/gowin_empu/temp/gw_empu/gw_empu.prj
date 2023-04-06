@@ -11,7 +11,7 @@
         <Option type="disable_insert_pad" value="1"/>
         <Option type="dsp_balance" value="1"/>
         <Option type="include_path" value="C:/Gowin/Gowin_V1.9.8.10/IDE/ipcore/gowin_empu_gw1ns4/data"/>
-        <Option type="include_path" value="C:/Users/MuZhi/Desktop/zynq/4k/4k_HDMI/src/gowin_empu/temp/gw_empu"/>
+        <Option type="include_path" value="C:/Users/MuZhi/Desktop/zynq/4k/game_body_12/game_body_12/src/gowin_empu/temp/gw_empu"/>
         <Option type="output_file" value="gowin_empu.vg"/>
         <Option type="output_template" value="gowin_empu_tmp.v"/>
         <Option type="ram_balance" value="1"/>

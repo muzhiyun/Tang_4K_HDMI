@@ -2,4 +2,4 @@
 `define GPIO_IOBUF_EN
 `define GOWIN_UART0_SUPPORT
 `define GOWIN_AHB2_M_SUPPORT
-`define NUM_BRAMS_8
+`define NUM_BRAMS_4

@@ -98,7 +98,7 @@ wire mclk ;             //mcu clock = 50MHz
 wire[1:0]btn ;//= 2'b11;   //按钮
 wire[1:0]sw ;//= 2'b11;  //拨码开关
 wire str ;// = 1'b0;       //游戏控制
-
+wire img ;                  //首页图显示
 //// 720p, 371.25 = 27 * 55 / 4, 371.25/5 = 74.25 (720p pixel clock)
 //// 480p, 159 = 27 * 53 / 9, 159/5 = 31.8 
 //https://juj.github.io/gowin_fpga_code_generators/pll_calculator.html
@@ -119,6 +119,8 @@ Gowin_CLKDIV u_div_5(
         .hclkin(clk_pixel_x5), //input hclkin
         .resetn(sys_resetn & pll_lock) //input resetn
 );
+
+
 
 //reg [32:0] cnt_clk;     
 //assign led = (cnt_clk < 26'd12_500_000) ? 1'b1 : 1'b0;
@@ -190,6 +192,7 @@ Gowin_AHB_Multiple u_ahb_multiple
     .mcu_btn(btn),
     .mcu_sw(sw),
     .mcu_str(str),
+    .mcu_img(img),
 .led(led)
 );
 
@@ -319,8 +322,36 @@ wire [2:0] game_rgb;       //颜色
 //    .hdmi_pix_y(cy),
 //    .led(led)
 //);
-wire graph_on;  
-game_process2 graph_unit(.clk(clk_pixel), .reset(sys_resetn),.pix_x(cx), .pix_y(cy), .btn(btn),.sw(sw),.str(str),.graph_on(graph_on), .graph_rgb(game_rgb));
+
+
+
+wire graph_on; 
+localparam FRAMEBUFFER_DEPTH = 160 * 120;
+//reg[$clog2(FRAMEBUFFER_DEPTH) - 1 : 0] sramAddress;
+reg[14 : 0] sramAddress;
+if(1'b1)
+//    Gowin_SP u_sp_img(
+//        .dout(game_rgb), //output [2:0] dout
+//        .clk(clk_pixel), //input clk
+//        .oce(oce_i), //input oce
+//        .ce(1'b1), //input ce
+//        .reset(1'b0), //input reset
+//        .wre(1'b0), //input wre
+//        .ad(sramAddress) //input [14:0] ad
+//        .din(game_rgb) //input [2:0] din
+//    );
+    Gowin_pROM u_prom_img(
+        .dout(game_rgb), //output [2:0] dout
+        .clk(clk_pixel), //input clk
+ //       .oce(oce_i), //input oce
+        .ce(1'b1), //input ce
+        .reset(1'b0), //input reset
+        .ad(sramAddress) //input [14:0] ad
+    );
+
+else 
+    game_process2 graph_unit(.clk(clk_pixel), .reset(sys_resetn),.pix_x(cx), .pix_y(cy), .btn(btn),.sw(sw),.str(str),.graph_on(graph_on), .graph_rgb(game_rgb));
+
 
 //Video Test Pattern
 // Border test (left = red, top = green, right = blue, bottom = blue, fill = black)
@@ -333,6 +364,9 @@ begin
 //        rgb = 24'hffffff;
 //    else
 //        rgb = 24'h000000;
+    sramAddress <= ((cx == 1'd0 && cy == 1'd0)||(cx == 12'd639 && cy == 12'd479)) ? 0 : ((cx > 12'd159 || cy > 12'd119) ? sramAddress : sramAddress + 1 );
+    //if(cx < 12'd160 && 12'd120)
+        
 	case(game_rgb)
         3'b111:
             rgb = 24'hffffff;

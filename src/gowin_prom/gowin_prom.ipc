@@ -1,0 +1,15 @@
+[General]
+ipc_version=4
+file=gowin_prom
+module=Gowin_pROM
+target_device=gw1nsr4c-000
+type=ram_prom
+version=1.0
+
+[Config]
+DEPTH=19200
+LANG=0
+MEM_FILE=../../tool/160x120_24bit_to3bit.mi
+READ=0
+RESET_MODE=true
+WIDTH=3

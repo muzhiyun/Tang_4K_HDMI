@@ -1,0 +1,19 @@
+[General]
+ipc_version=4
+file=scaler_lite_up
+module=Scaler_Lite_Up_Top
+target_device=gw1nsr4c-000
+type=scaler_lite_up
+version=1.0
+
+[Config]
+DataFormat=VESA RGB 24bits
+FetchDataDelayValue=2
+InputFrameHeight=120
+InputFrameWidth=160
+Language=0
+LineBufferDepth=2048
+ScalerAlgorithm=Simple Without DSP
+Synthesis_tool=GowinSynthesis
+ZoomDir=Both
+ZoomRatio=1:2

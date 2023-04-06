@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gowin-synthesis-project>
+<Project>
+    <Version>beta</Version>
+    <Device id="GW1NSR-4C" package="QFN48P" speed="6" partNumber="GW1NSR-LV4CQN48PC6/I5"/>
+    <FileList>
+        <File path="C:/Gowin/Gowin_V1.9.8.10/IDE/ipcore/SCALER_LITE_up/data/scaler_lite_up_top.v" type="verilog"/>
+        <File path="C:/Gowin/Gowin_V1.9.8.10/IDE/ipcore/SCALER_LITE_up/data/scaler_core_up.v" type="verilog"/>
+    </FileList>
+    <OptionList>
+        <Option type="disable_insert_pad" value="1"/>
+        <Option type="dsp_balance" value="1"/>
+        <Option type="include_path" value="C:/Gowin/Gowin_V1.9.8.10/IDE/ipcore/SCALER_LITE_up/data"/>
+        <Option type="include_path" value="C:/Users/MuZhi/Desktop/zynq/4k/game_body_12/game_body_12/src/scaler_lite_up/temp/scaler_lite_up"/>
+        <Option type="output_file" value="scaler_lite_up.vg"/>
+        <Option type="output_template" value="scaler_lite_up_tmp.v"/>
+        <Option type="ram_balance" value="1"/>
+        <Option type="ram_rw_check" value="1"/>
+        <Option type="verilog_language" value="sysv-2017"/>
+    </OptionList>
+</Project>

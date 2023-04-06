@@ -1,0 +1,8 @@
+`define VESA_RGB_24BIT
+`define ZOOM_RATIO_1_2
+`define NO_DSP_MODE
+`define ZOOM_BOTH
+`define BUFF_DEPTH_2048
+`define DEF_INPUT_HSIZE 160
+`define DEF_INPUT_VSIZE 120
+`define FETCH_DATA_DELAY 2

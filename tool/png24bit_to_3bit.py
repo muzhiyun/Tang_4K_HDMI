@@ -3,9 +3,10 @@ from PIL import Image
 import struct
 import sys
 
-png_24bit_file = "640x480_24bit.png"
-mi_3bit_file  = (png_24bit_file.split('.')[0])+".mi"
-img_3bit_file  = (png_24bit_file.split('.')[0])+"_to3bit.bmp"
+#png_24bit_file = "640x480_24bit.png"
+png_24bit_file = "160x120_24bit.png"
+mi_3bit_file  = (png_24bit_file.split('.')[0])+"_to3bit.mi"
+img_3bit_file  = (png_24bit_file.split('.')[0])+"_to3bit.rgb"
 
 img_PIL = Image.open(png_24bit_file)
 #mode_list = ['1','L','F','P','RGB','RGBA','CMYK','YCbCr']
@@ -43,7 +44,7 @@ for y in range(0, height): #each pixel
         else:                   b1Bit = 0
         #mi_file.write("{:x}{:x}{:x}\n".format(RGB[0],RGB[1],RGB[2]))
         mi_file.write("{:x}{:x}{:x}\n".format((r1Bit),(g1Bit),(b1Bit)))
-        #python也没有switch case
+        #python3.10以前也没有switch case
         if (byte_status == 0): #00000000
             byte0 = ( (r1Bit<<2) | (g1Bit<<1) | (b1Bit) )
             byte_status += 1

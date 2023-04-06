@@ -21,6 +21,7 @@ module Gowin_AHB_Multiple
     output   wire[1:0]       mcu_btn,   //按钮
     output   wire[1:0]       mcu_sw,  //拨码开关
     output   wire            mcu_str,       //游戏控制
+    output   wire            mcu_img,
     output   wire             led
 );
 
@@ -149,6 +150,7 @@ Gowin_Multiple u_multiple
 	.Product		(wire_multiple_result),
     .u_btn(mcu_btn),
     .u_sw(mcu_sw),
+    .u_img(mcu_img),
     .u_str(mcu_str)
     
 );
@@ -168,6 +170,7 @@ module Gowin_Multiple
 	output	wire	[15:0]	Product,
     output   wire[1:0]      u_btn,   //按钮
     output   wire[1:0]      u_sw,  //拨码开关
+    output   wire           u_img,  //拨码开关
     output   wire           u_str       //游戏控制
 );
 
@@ -180,6 +183,7 @@ reg isDone;
 
 reg [1:0] mbtn;
 reg mstr;
+reg mimg;
 
 
 always @(posedge CLK or negedge RSTn)
@@ -243,4 +247,5 @@ assign Done_Sig = isDone;
 assign Product  = isNeg?(~Temp + 1'b1):Temp;
 assign u_btn = mbtn;
 assign u_str = mstr;
+assign u_img = 1'b1;//mimg;
 endmodule
