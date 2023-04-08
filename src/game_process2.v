@@ -355,7 +355,11 @@ always@*
 	begin 
 		graph_rgb = 3'b000;
 		if(graph_on )begin
-			if(block_on[0]||block_on[1]||block_on[2])
+            if(pix_x < 12'd4 || pix_x > 12'd634)
+                graph_rgb = 3'b100;
+            else if(pix_y < 12'd4 || pix_y > 12'd474)
+                graph_rgb = 3'b100;
+            else if(block_on[0]||block_on[1]||block_on[2])
 			graph_rgb = 3'b011;
 			else if(bar_on)
 			graph_rgb = 3'b110;

@@ -169,7 +169,7 @@ module Gowin_Multiple
 	output	wire			Done_Sig,
 	output	wire	[15:0]	Product,
     output   wire[1:0]      u_btn,   //按钮
-    output   wire[1:0]      u_sw,  //拨码开关
+    output   wire[1:0]      u_sw,  //挡板长度选择
     output   wire           u_img,  //拨码开关
     output   wire           u_str       //游戏控制
 );
@@ -184,7 +184,7 @@ reg isDone;
 reg [1:0] mbtn;
 reg mstr;
 reg mimg;
-
+reg [1:0] msw;
 
 always @(posedge CLK or negedge RSTn)
 begin
@@ -204,6 +204,8 @@ begin
             
             mbtn[0] <= Multiplicand[7] ;        //左右方向键
             mbtn[1] <= Multiplicand[6] ;
+            msw[0] <= Multiplicand[5] ;        //挡板长度选择
+            msw[1] <= Multiplicand[4] ;
             mstr    <= Multiplier[7] ;       //暂停开始键
             mimg    <= Multiplier[6] ;       //Menu/Game显示切换键
             isDone <= 1'b1;
@@ -249,4 +251,5 @@ assign Product  = isNeg?(~Temp + 1'b1):Temp;
 assign u_btn = mbtn;
 assign u_str = mstr;
 assign u_img = mimg;
+assign u_sw = msw;
 endmodule

@@ -98,6 +98,7 @@ wire mclk ;             //mcu clock = 50MHz
 wire[1:0]btn ;//= 2'b11;   //按钮
 wire[1:0]sw ;//= 2'b11;  //拨码开关
 wire str ;// = 1'b0;       //游戏控制
+wire game_start;             //GameUI flag 
 
 
 //// 720p, 371.25 = 27 * 55 / 4, 371.25/5 = 74.25 (720p pixel clock)
@@ -325,7 +326,7 @@ logic [23:0] rgb = 24'hff0000;   //24'hffffff;   // R G B
 //);
 
 
-wire game_start;             //GameUI flag 
+
 wire graph_on; 
 wire [2:0] menu_rgb;       //颜色
 wire [2:0] game_rgb;       //颜色
@@ -350,8 +351,8 @@ localparam FRAMEBUFFER_DEPTH = 160 * 120;
         .dout(menu_rgb), //output [2:0] dout
         .clk(clk_pixel), //input clk
         .ce(~game_start), //input ce
-        //.oce(game_start), //input oce
-        .reset(1'b0), //input reset
+        .oce(1'b0), //input oce
+        .reset(~sys_resetn), //input reset
         .ad(sramAddress) //input [14:0] ad
     );
 
@@ -386,21 +387,21 @@ begin
    end
    else if(cx < 12'd640 && cy < 12'd480) begin
         if(vCycleCount != 4'd3 && cx != 12'd639) begin
-            vCycleCount <= vCycleCount + 1;
+            vCycleCount <= vCycleCount + 1'b1;
         end
-        else if(vCycleCount == 4'd3 && cx != 12'd639) begin        //列重复4次完成
+        if(vCycleCount == 4'd3 && cx != 12'd639) begin        //列重复4次完成
             vCycleCount <= 0;
-            sramAddress <= sramAddress + 1;
+            sramAddress <= sramAddress + 1'b1;
         end
         if(cx == 12'd639 && hCycleCount != 4'd3 )begin     //列重复到达一行末尾 但下一行仍需重复
             vCycleCount <= 0;
-            hCycleCount <= hCycleCount + 1;
+            hCycleCount <= hCycleCount + 1'b1;
             sramAddress <= sramAddress - 12'd159;  
         end
         if(cx == 12'd639 && hCycleCount == 4'd3 ) begin     //行列终点 下一行无需重复
             vCycleCount <= 0;
             hCycleCount <= 0;
-            sramAddress <= sramAddress + 1;
+            sramAddress <= sramAddress + 1'b1;
         end 
    end
 
