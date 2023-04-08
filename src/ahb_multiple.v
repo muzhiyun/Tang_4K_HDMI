@@ -205,6 +205,7 @@ begin
             mbtn[0] <= Multiplicand[7] ;        //左右方向键
             mbtn[1] <= Multiplicand[6] ;
             mstr    <= Multiplier[7] ;       //暂停开始键
+            mimg    <= Multiplier[6] ;       //Menu/Game显示切换键
             isDone <= 1'b1;
 
         end
@@ -247,5 +248,5 @@ assign Done_Sig = isDone;
 assign Product  = isNeg?(~Temp + 1'b1):Temp;
 assign u_btn = mbtn;
 assign u_str = mstr;
-assign u_img = 1'b1;//mimg;
+assign u_img = mimg;
 endmodule

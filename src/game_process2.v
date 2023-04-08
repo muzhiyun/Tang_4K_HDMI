@@ -3,6 +3,7 @@ module game_process2(
 			input wire [1:0]btn,
 			input wire [1:0]sw,
 			input wire str,
+            input wire enable,
 			input [9:0]pix_x, pix_y,
 			output wire graph_on,
 			output reg [2:0] graph_rgb
@@ -349,11 +350,11 @@ always@*
 		endcase
 	end
 	
-assign graph_on = block_on[0]||block_on[1]||block_on[2]||bar_on||rd_ball_on;
+assign graph_on = block_on[0]||block_on[1]||block_on[2]||bar_on||rd_ball_on||enable;
 always@*
 	begin 
 		graph_rgb = 3'b000;
-		if(graph_on)begin
+		if(graph_on )begin
 			if(block_on[0]||block_on[1]||block_on[2])
 			graph_rgb = 3'b011;
 			else if(bar_on)

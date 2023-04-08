@@ -98,7 +98,8 @@ wire mclk ;             //mcu clock = 50MHz
 wire[1:0]btn ;//= 2'b11;   //按钮
 wire[1:0]sw ;//= 2'b11;  //拨码开关
 wire str ;// = 1'b0;       //游戏控制
-wire img ;                  //首页图显示
+
+
 //// 720p, 371.25 = 27 * 55 / 4, 371.25/5 = 74.25 (720p pixel clock)
 //// 480p, 159 = 27 * 53 / 9, 159/5 = 31.8 
 //https://juj.github.io/gowin_fpga_code_generators/pll_calculator.html
@@ -192,8 +193,8 @@ Gowin_AHB_Multiple u_ahb_multiple
     .mcu_btn(btn),
     .mcu_sw(sw),
     .mcu_str(str),
-    .mcu_img(img),
-.led(led)
+    .mcu_img(game_start),
+    .led(led)
 );
 
 
@@ -305,8 +306,8 @@ logic [23:0] rgb = 24'hff0000;   //24'hffffff;   // R G B
 
 
 //output wire [1:0]LED,     //显示游戏分数
-wire hsync, vsync; //VGA信号
-wire [2:0] game_rgb;       //颜色
+//wire hsync, vsync; //VGA信号
+
 
 
 //game_graph_top u_game_graph_top (
@@ -324,12 +325,17 @@ wire [2:0] game_rgb;       //颜色
 //);
 
 
-
+wire game_start;             //GameUI flag 
 wire graph_on; 
+wire [2:0] menu_rgb;       //颜色
+wire [2:0] game_rgb;       //颜色
+reg [2:0] final_rgb;       //颜色
+reg[14 : 0] sramAddress;
+
+
 localparam FRAMEBUFFER_DEPTH = 160 * 120;
 //reg[$clog2(FRAMEBUFFER_DEPTH) - 1 : 0] sramAddress;
-reg[14 : 0] sramAddress;
-if(1'b1)
+
 //    Gowin_SP u_sp_img(
 //        .dout(game_rgb), //output [2:0] dout
 //        .clk(clk_pixel), //input clk
@@ -341,33 +347,68 @@ if(1'b1)
 //        .din(game_rgb) //input [2:0] din
 //    );
     Gowin_pROM u_prom_img(
-        .dout(game_rgb), //output [2:0] dout
+        .dout(menu_rgb), //output [2:0] dout
         .clk(clk_pixel), //input clk
- //       .oce(oce_i), //input oce
-        .ce(1'b1), //input ce
+        .ce(~game_start), //input ce
+        //.oce(game_start), //input oce
         .reset(1'b0), //input reset
         .ad(sramAddress) //input [14:0] ad
     );
 
-else 
-    game_process2 graph_unit(.clk(clk_pixel), .reset(sys_resetn),.pix_x(cx), .pix_y(cy), .btn(btn),.sw(sw),.str(str),.graph_on(graph_on), .graph_rgb(game_rgb));
+
+    game_process2 graph_unit(.clk(clk_pixel), .enable(game_start),.reset(sys_resetn&game_start),.pix_x(cx), .pix_y(cy), .btn(btn),.sw(sw),.str(str),.graph_on(graph_on), .graph_rgb(game_rgb));
+
+reg[1:0] hCycleCount;
+reg[1:0] vCycleCount;
 
 
 //Video Test Pattern
 // Border test (left = red, top = green, right = blue, bottom = blue, fill = black)
-always @(posedge clk_pixel)
+always @(posedge clk_pixel )
 begin
 //  rgb <= {cx == 0 ? ~8'd0 : 8'd0, cy == 0 ? ~8'd0 : 8'd0, cx == screen_width - 1'd1 || cy == screen_width - 1'd1 ? ~8'd0 : 8'd0};
-//    if(cx == 12'd0 || cx == 12'd639)
-//        rgb = 24'hffffff;
-//    else if(cy == 12'd0 || cy == 12'd479)
-//        rgb = 24'hffffff;
-//    else
-//        rgb = 24'h000000;
-    sramAddress <= ((cx == 1'd0 && cy == 1'd0)||(cx == 12'd639 && cy == 12'd479)) ? 0 : ((cx > 12'd159 || cy > 12'd119) ? sramAddress : sramAddress + 1 );
-    //if(cx < 12'd160 && 12'd120)
-        
-	case(game_rgb)
+
+/*
+    if(cx == 12'd0 || cx == 12'd639)
+        rgb = 24'hffffff;
+    else if(cy == 12'd0 || cy == 12'd479)
+        rgb = 24'hffffff;
+    else
+        rgb = 24'h000000;
+*/
+
+// sramAddress <= ((cx == 12'd0 && cy == 12'd0) || (cx == 12'd639 && cy == 12'd479)) ? 0 : ((cx > 12'd159 || cy > 12'd119) ? sramAddress : sramAddress + 1 );
+
+   if((cx == 12'd0 && cy == 12'd0) || (cx > 12'd639 && cy > 12'd479)) begin
+        sramAddress <= 0;
+        hCycleCount <= 0;
+        vCycleCount <= 0;
+   end
+   else if(cx < 12'd640 && cy < 12'd480) begin
+        if(vCycleCount != 4'd3 && cx != 12'd639) begin
+            vCycleCount <= vCycleCount + 1;
+        end
+        else if(vCycleCount == 4'd3 && cx != 12'd639) begin        //列重复4次完成
+            vCycleCount <= 0;
+            sramAddress <= sramAddress + 1;
+        end
+        if(cx == 12'd639 && hCycleCount != 4'd3 )begin     //列重复到达一行末尾 但下一行仍需重复
+            vCycleCount <= 0;
+            hCycleCount <= hCycleCount + 1;
+            sramAddress <= sramAddress - 12'd159;  
+        end
+        if(cx == 12'd639 && hCycleCount == 4'd3 ) begin     //行列终点 下一行无需重复
+            vCycleCount <= 0;
+            hCycleCount <= 0;
+            sramAddress <= sramAddress + 1;
+        end 
+   end
+
+    if(game_start) 
+        final_rgb <= game_rgb;
+    else 
+        final_rgb <= menu_rgb;
+    case(final_rgb)
         3'b111:
             rgb = 24'hffffff;
         3'b110:
@@ -387,7 +428,7 @@ begin
     endcase
 end
 
-// 1280x720 @ 59.94Hz
+// 640x480 @ 59.94Hz
 hdmi #(.VIDEO_ID_CODE(1), .VIDEO_REFRESH_RATE(59.94), .AUDIO_RATE(48000), .AUDIO_BIT_WIDTH(16)) hdmi(
   .clk_pixel_x5(clk_pixel_x5),
   .clk_pixel(clk_pixel),
