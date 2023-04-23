@@ -9,7 +9,7 @@ version=1.0
 [Config]
 DEPTH=19200
 LANG=0
-MEM_FILE=../../tool/160x120_24bit_to3bit.mi
+MEM_FILE=C:\\Users\\lenovo\\Desktop\\game_body_6(6)\\game_body_6(5)\\Tang_4K_HDMI-game_body\\tool\\images1_to3bit.mi
 READ=0
 RESET_MODE=true
 WIDTH=3

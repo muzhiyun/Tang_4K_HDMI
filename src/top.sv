@@ -1,7 +1,7 @@
 module top (
     input sys_clk,
     input sys_resetn,
-    
+    input wire enable,
 ////  video clocks
 //    input clk_pixel,
 //    input clk_5x_pixel,
@@ -17,6 +17,7 @@ module top (
 //	input wire[1:0]btn,   //按钮
 //	input wire[1:0]sw,  //拨码开关
 //	input wire str,       //游戏控制
+
 
 
     //for mcu
@@ -215,8 +216,8 @@ Gowin_EMPU_Top empu_u(
     .master_hsize(master_hsize),
     .master_hburst(master_hburst),
     .master_hprot(master_hprot),
-    .master_hmemattr(master_hmemattr),
-    .master_hexreq(master_hexreq),
+    .master_memattr(master_hmemattr),
+    .master_exreq(master_hexreq),
     .master_hmaster(master_hmaster),
     .master_hwdata(master_hwdata),
     .master_hmastlock(master_hmastlock),
@@ -226,7 +227,7 @@ Gowin_EMPU_Top empu_u(
     .master_hrdata(master_hrdata),
     .master_hreadyout(master_hreadyout),
     .master_hresp(master_hresp),
-    .master_hexresp(1'b0),
+    .master_exresp(1'b0),
     .master_hruser(3'b000),
     .reset_n(sys_resetn) //input reset_n
 );

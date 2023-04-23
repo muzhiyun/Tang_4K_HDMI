@@ -4,7 +4,7 @@ import struct
 import sys
 
 #png_24bit_file = "640x480_24bit.png"
-png_24bit_file = "160x120_24bit.png"
+png_24bit_file = "images1.jpg"
 mi_3bit_file  = (png_24bit_file.split('.')[0])+"_to3bit.mi"
 img_3bit_file  = (png_24bit_file.split('.')[0])+"_to3bit.rgb"
 
