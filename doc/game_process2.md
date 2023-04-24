@@ -10,17 +10,17 @@
 | ------------ | ----- | ------ | ----------- |
 | MAX_X        |       | 640    |             |
 | MAX_Y        |       | 480    |             |
-| block0_x     |       | 170    |             |
-| block1_x     |       | 290    |             |
-| block2_x     |       | 410    |             |
-| block_y      |       | 180    |             |
-| width        |       | 40     |             |
-| length       |       | 60     |             |
+| block_width  |       | 40     |             |
+| block_height |       | 30     |             |
+| num_rows     |       | 6      |             |
+| num_cols     |       | 16     |             |
+| row          |       | 6      |             |
+| col          |       | 16     |             |
 | bar_x_size1  |       | 240    |             |
 | bar_x_size2  |       | 40     |             |
 | bar_x_size3  |       | 30     |             |
-| bar_y_b      |       | 357    |             |
-| bar_y_t      |       | 353    |             |
+| bar_y_b      |       | 457    |             |
+| bar_y_t      |       | 453    |             |
 | bar_v        |       | 2      |             |
 | ball_size    |       | 8      |             |
 | s0           | [2:0] | 3'b000 |             |
@@ -33,51 +33,69 @@
 | btn       | input     | wire [1:0] |             |
 | sw        | input     | wire [1:0] |             |
 | str       | input     | wire       |             |
+| enable    | input     | wire       |             |
 | pix_x     | input     | [9:0]      |             |
 | pix_y     | input     |            |             |
 | graph_on  | output    | wire       |             |
 | graph_rgb | output    | [2:0]      |             |
 ## Signals
 
-| Name        | Type       | Description |
-| ----------- | ---------- | ----------- |
-| refr_tick   | wire       |             |
-| block_on    | wire [2:0] |             |
-| bar_x_size  | reg [9:0]  |             |
-| bar_on      | wire       |             |
-| bar_x_l     | wire [9:0] |             |
-| bar_x_r     | wire [9:0] |             |
-| bar_x_reg   | reg[9:0]   |             |
-| bar_x_next  | reg[9:0]   |             |
-| ball_x_l    | wire [9:0] |             |
-| ball_x_r    | wire [9:0] |             |
-| ball_y_t    | wire [9:0] |             |
-| ball_y_b    | wire [9:0] |             |
-| ball_x_reg  | reg [9:0]  |             |
-| ball_y_reg  | reg [9:0]  |             |
-| ball_x_next | wire [9:0] |             |
-| ball_y_next | wire [9:0] |             |
-| rom_addr    | wire [2:0] |             |
-| rom_col     | wire [2:0] |             |
-| rom_data    | reg [7:0]  |             |
-| rom_bit     | wire       |             |
-| sq_ball_on  | wire       |             |
-| rd_ball_on  | wire       |             |
-| move_state  | reg[2:0]   |             |
-| x_v_reg     | reg [9:0]  |             |
-| x_v_next    | reg [9:0]  |             |
-| y_v_reg     | reg [9:0]  |             |
-| y_v_next    | reg [9:0]  |             |
-| str_run     | reg        |             |
-| ball_v_0    | reg[9:0]   |             |
-| ball_v_1    | reg[9:0]   |             |
-| LED_reg     | reg [1:0]  |             |
+| Name                       | Type                             | Description |
+| -------------------------- | -------------------------------- | ----------- |
+| refr_tick                  | wire                             |             |
+| block_on                   | wire [num_cols*num_rows:0]       |             |
+| bricks                     | reg [num_cols-1:0][num_rows-1:0] |             |
+| bar_x_size                 | reg [9:0]                        |             |
+| bar_on                     | wire                             |             |
+| bar_x_l                    | wire [9:0]                       |             |
+| bar_x_r                    | wire [9:0]                       |             |
+| bar_x_reg                  | reg[9:0]                         |             |
+| bar_x_next                 | reg[9:0]                         |             |
+| ball_x_l                   | wire [9:0]                       |             |
+| ball_x_r                   | wire [9:0]                       |             |
+| ball_y_t                   | wire [9:0]                       |             |
+| ball_y_b                   | wire [9:0]                       |             |
+| ball_x_reg                 | reg [9:0]                        |             |
+| ball_y_reg                 | reg [9:0]                        |             |
+| ball_x_next                | wire [9:0]                       |             |
+| ball_y_next                | wire [9:0]                       |             |
+| rom_addr                   | wire [2:0]                       |             |
+| rom_col                    | wire [2:0]                       |             |
+| rom_data                   | reg [7:0]                        |             |
+| rom_bit                    | wire                             |             |
+| sq_ball_on                 | wire                             |             |
+| rd_ball_on                 | wire                             |             |
+| move_state                 | reg[2:0]                         |             |
+| x_v_reg                    | reg [9:0]                        |             |
+| x_v_next                   | reg [9:0]                        |             |
+| y_v_reg                    | reg [9:0]                        |             |
+| y_v_next                   | reg [9:0]                        |             |
+| str_run                    | reg                              |             |
+| ball_v_0                   | reg[9:0]                         |             |
+| ball_v_1                   | reg[9:0]                         |             |
+| brick_numba                | reg [num_cols-1:0][num_rows-1:0] |             |
+| LED_reg                    | reg [1:0]                        |             |
+| block_collision            | reg                              |             |
+| block_horizontal_collision | reg                              |             |
+| block_vertical_collision   | reg                              |             |
+| left_wall_collision        | reg                              |             |
+| right_wall_collision       | reg                              |             |
+| top_wall_collision         | reg                              |             |
+| paddle_collision           | reg                              |             |
+| block_horizontal_collision | reg                              |             |
+| block_vertical_collision   | reg                              |             |
+| block_up_collision         | reg                              |             |
+| block_down_collision       | reg                              |             |
+| block_left_collision       | reg                              |             |
+| block_right_collision      | reg                              |             |
+| delay_counter              | integer                          |             |
 ## Constants
 
-| Name      | Type | Value | Description |
-| --------- | ---- | ----- | ----------- |
-| ball_v_10 |      | -1    |             |
-| ball_v_11 |      | 1     |             |
+| Name         | Type | Value | Description |
+| ------------ | ---- | ----- | ----------- |
+| ball_v_10    |      | -1    |             |
+| ball_v_11    |      | 1     |             |
+| DELAY_LENGTH |      | 10    |             |
 ## Processes
 - unnamed: ( @* )
   - **Type:** always
@@ -87,10 +105,12 @@
   - **Type:** always
 - unnamed: ( @(posedge clk or negedge reset) )
   - **Type:** always
+- unnamed: ( @(posedge clk) )
+  - **Type:** always
 - unnamed: ( @(posedge clk or negedge reset) )
   - **Type:** always
-- unnamed: ( @* )
-  - **Type:** always
+- unnamed: (  )
+  - **Type:** always_comb
 - unnamed: ( @* )
   - **Type:** always
 ## State machines

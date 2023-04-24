@@ -115,7 +115,7 @@ generate
       always @(posedge clk) begin
         brick_numba[i][j] <= bricks[i][j];
       end
-      assign block_on[j*num_cols+i] = brick_numba[i][j] && i*block_width <= pix_x && pix_x <= (i+1)*block_width && j*block_height <= pix_y && pix_y <= (j+1)*block_height;
+      assign block_on[j*num_cols+i] = (brick_numba[i][j])&&(i*block_width <= pix_x)&& (pix_x <= (i+1)*block_width) && ( j*block_height <= pix_y ) && (pix_y <= (j+1)*block_height);
     end                         
   end
 endgenerate
@@ -350,15 +350,15 @@ end
 
 
 
-always @(posedge clk or negedge reset) begin
-    if (!reset) begin
-        x_v_reg <= 0;
-        y_v_reg <= 0;
-    end else begin
-        x_v_reg <= x_v_next;
-        y_v_reg <= y_v_next;
-    end
-end
+//always @(posedge clk or negedge reset) begin
+//    if (!reset) begin
+//        x_v_reg <= 0;
+//        y_v_reg <= 0;
+//    end else begin
+//        x_v_reg <= x_v_next;
+//        y_v_reg <= y_v_next;
+//    end
+//end
 
 always_comb begin
     x_v_next = x_v_reg;
@@ -590,37 +590,33 @@ end
 //		endcase
 //	end
 	
-assign graph_on = block_on||bar_on||rd_ball_on;
+assign graph_on = bar_on||rd_ball_on;
 
 always@*
 	begin 
-		graph_rgb = 3'b000;
-		if(graph_on)begin
-			if(block_on) 
-           begin
-             if(block_on[16])     //标记测试
-                graph_rgb = 3'b111;
-            else if(block_on) begin
-          for (int i = 0; i < num_cols*num_rows; i += 1) begin
-        if (block_on[i]) begin
-            if (i % 3 == 0)
-                graph_rgb = 3'b001;
-            else if(i % 3 == 1)
-                graph_rgb = 3'b100;
-            else
-                graph_rgb = 3'b010;
-        end                  end
-    end
-           
-
-           end
-
-
-			else if(bar_on)
-			graph_rgb = 3'b110;
-			else if(rd_ball_on)
-			graph_rgb = 3'b100;
-			end
-		end
+        graph_rgb = 3'b000;
+        if(graph_on) begin
+            if(block_on) begin
+                if(block_on[16])     //标记测试
+                    graph_rgb = 3'b111;
+                else if(block_on) begin
+                    for (int i = 0; i < num_cols*num_rows; i += 1) begin
+                        if (block_on[i]) begin
+                            if (i % 3 == 0)
+                                graph_rgb = 3'b001;
+                            else if(i % 3 == 1)
+                                graph_rgb = 3'b100;
+                            else
+                                graph_rgb = 3'b010;
+                        end                  
+                    end
+                end
+            end
+        else if(bar_on)
+            graph_rgb = 3'b110;
+        else if(rd_ball_on)
+            graph_rgb = 3'b100;
+        end
+	end
 
 endmodule
