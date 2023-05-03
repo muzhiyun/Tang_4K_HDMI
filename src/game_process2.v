@@ -34,14 +34,15 @@ initial begin      //bricks的初始化
     
     for (int i = 0; i < num_rows; i++) begin
         for (int j = 0; j < num_cols; j++) begin
-            bricks[j][i] = 1;
+            bricks[j][i] = 1'b1;
         end
     end
+    //bricks[3][5] = 0;
 end
 
 
 //挡板定义
-parameter bar_x_size1 = 240;
+parameter bar_x_size1 = 600;
 parameter bar_x_size2 = 40;
 parameter bar_x_size3 = 30;
 parameter bar_y_b = 457;
@@ -108,14 +109,14 @@ assign refr_tick = (pix_y == 481)&&(pix_x == 0);
 
 
 genvar i, j;
-reg [num_cols-1:0][num_rows-1:0] brick_numba;
+//reg [num_cols-1:0][num_rows-1:0] brick_numba;
 generate 
   for (i = 0; i < num_cols; i=i+1) begin
     for (j = 0; j < num_rows; j=j+1) begin
-      always @(posedge clk) begin
-        brick_numba[i][j] <= bricks[i][j];
-      end
-      assign block_on[j*num_cols+i] = (brick_numba[i][j])&&(i*block_width <= pix_x)&& (pix_x <= (i+1)*block_width) && ( j*block_height <= pix_y ) && (pix_y <= (j+1)*block_height);
+      //always @(posedge clk) begin
+       // brick_numba[i][j] <= bricks[i][j];
+      //  end
+        assign block_on[j*num_cols+i] = bricks[i][j] && (i*block_width < pix_x) && (pix_x < (i+1)*block_width) && ( j*block_height < pix_y ) && (pix_y < (j+1)*block_height);
     end                         
   end
 endgenerate
@@ -125,14 +126,14 @@ endgenerate
 assign  bar_x_l = bar_x_reg;
 assign  bar_x_r = bar_x_l+bar_x_size-1;
 assign bar_on = (bar_x_l <= pix_x)&&(pix_x<=bar_x_r)&&(bar_y_t<=pix_y)&&(pix_y<=bar_y_b);
-reg [1:0] LED_reg;
+//reg [1:0] LED_reg;
 //棒长短
 always@*
 case(sw)
-	2'b00: begin ball_v_0 <= ball_v_10; ball_v_1 <= ball_v_11; bar_x_size <= bar_x_size1; LED_reg <= 2'b01;end
-	2'b01: begin ball_v_0 <= ball_v_10; ball_v_1 <= ball_v_11; bar_x_size <= bar_x_size2; LED_reg <= 2'b10;end
-	2'b10: begin ball_v_0 <= ball_v_10; ball_v_1 <= ball_v_11; bar_x_size <= bar_x_size3; LED_reg <= 2'b11;end
-	2'b11: begin ball_v_0 <= ball_v_10; ball_v_1 <= ball_v_11; bar_x_size <= bar_x_size3; LED_reg <= 2'b11; end
+	2'b00: begin ball_v_0 <= ball_v_10; ball_v_1 <= ball_v_11; bar_x_size <= bar_x_size1;end
+	2'b01: begin ball_v_0 <= ball_v_10; ball_v_1 <= ball_v_11; bar_x_size <= bar_x_size2;end
+	2'b10: begin ball_v_0 <= ball_v_10; ball_v_1 <= ball_v_11; bar_x_size <= bar_x_size3;end
+	2'b11: begin ball_v_0 <= ball_v_10; ball_v_1 <= ball_v_11; bar_x_size <= bar_x_size3;end
 endcase
 
 //assign LED =LED_reg;
@@ -200,8 +201,18 @@ reg block_collision,block_horizontal_collision,block_vertical_collision,  left_w
 reg paddle_collision ;
 reg block_horizontal_collision, block_vertical_collision;
 reg block_up_collision, block_down_collision, block_left_collision, block_right_collision;
-always @(posedge clk) begin
-    // Reset collision signals
+//always @(posedge clk or negedge reset) begin
+//    
+//end
+
+//localparam DELAY_LENGTH = 0; // 碰撞判定时延，改其他的都会bug，不懂为什么
+//integer delay_counter;
+always @(posedge clk or negedge reset) begin
+    if (!reset) begin
+        move_state <= s0;
+        //delay_counter <= 0;
+    end else begin
+        // Reset collision signals
     block_horizontal_collision <= 0;
     block_vertical_collision <= 0;
     block_up_collision <= 0;
@@ -279,69 +290,59 @@ end
     // Set horizontal and vertical collision signals
     block_horizontal_collision <= block_left_collision | block_right_collision;
     block_vertical_collision <= block_up_collision | block_down_collision;
-end
-
-localparam DELAY_LENGTH = 10; // 碰撞判定时延，改其他的都会bug，不懂为什么
-integer delay_counter;
-always @(posedge clk or negedge reset) begin
-    if (!reset) begin
-        move_state <= s0;
-        delay_counter <= 0;
-    end else begin
-        if (delay_counter > 0) delay_counter <= delay_counter - 1;
 
         case (move_state)
             s0: begin
                 if (str_run) move_state <= s1;
             end
             s1: begin // Ball moving left and up
-                if (delay_counter == 0) begin
+                //if (delay_counter == 0) begin
                     if (block_vertical_collision || top_wall_collision) begin
                         move_state <= s4;
-                        delay_counter <= DELAY_LENGTH;
+                        //delay_counter <= DELAY_LENGTH;
                     end else if (block_horizontal_collision || left_wall_collision) begin
                         move_state <= s2;
-                        delay_counter <= DELAY_LENGTH;
+                        //delay_counter <= DELAY_LENGTH;
                     end else if (paddle_collision) begin
                         move_state <= s3;
-                        delay_counter <= DELAY_LENGTH;
+                        //delay_counter <= DELAY_LENGTH;
                     end
-                end
+                //end
             end
             s2: begin // Ball moving right and up
-                if (delay_counter == 0) begin
+                //if (delay_counter == 0) begin
                     if (block_vertical_collision || top_wall_collision) begin
                         move_state <= s3;
-                        delay_counter <= DELAY_LENGTH;
+                        //delay_counter <= DELAY_LENGTH;
                     end else if (block_horizontal_collision || right_wall_collision) begin
                         move_state <= s1;
-                        delay_counter <= DELAY_LENGTH;
+                        //delay_counter <= DELAY_LENGTH;
                     end else if (paddle_collision) begin
                         move_state <= s4;
-                        delay_counter <= DELAY_LENGTH;
+                        //delay_counter <= DELAY_LENGTH;
                     end
-                end
+                //end
             end
             s3: begin // Ball moving right and down
-                if (delay_counter == 0) begin
+                //if (delay_counter == 0) begin
                     if (block_vertical_collision || paddle_collision) begin
                         move_state <= s2;
-                        delay_counter <= DELAY_LENGTH;
+                        //delay_counter <= DELAY_LENGTH;
                     end else if (block_horizontal_collision || right_wall_collision) begin
                         move_state <= s4;
-                        delay_counter <= DELAY_LENGTH;
+                        //delay_counter <= DELAY_LENGTH;
                     end
-                end
+                //end
             end
             s4: begin // Ball moving left and down
-                if (delay_counter == 0) begin
+                //if (delay_counter == 0) begin
                     if (block_vertical_collision || paddle_collision) begin
                         move_state <= s1;
-                        delay_counter <= DELAY_LENGTH;
+                        //delay_counter <= DELAY_LENGTH;
                     end else if (block_horizontal_collision || left_wall_collision) begin
                         move_state <= s3;
-                        delay_counter <= DELAY_LENGTH;
-                end
+                        //delay_counter <= DELAY_LENGTH;
+                //end
             end
         end
     endcase
@@ -590,33 +591,28 @@ end
 //		endcase
 //	end
 	
-assign graph_on = bar_on||rd_ball_on;
+//assign graph_on = block_on||bar_on||rd_ball_on;
 
 always@*
 	begin 
         graph_rgb = 3'b000;
-        if(graph_on) begin
-            if(block_on) begin
-                if(block_on[16])     //标记测试
+        //if(graph_on) begin
+            for (int i = 0; i < num_cols*num_rows; i += 1) begin
+                if (block_on[i]) begin
+                    if (i % 3 == 0)
+                        graph_rgb = 3'b001;
+                    else if(i % 3 == 1)
+                        graph_rgb = 3'b100;
+                    else
+                        graph_rgb = 3'b010;
+                end   
+                else if(bar_on)
+                    graph_rgb = 3'b110;
+                else if(rd_ball_on)
                     graph_rgb = 3'b111;
-                else if(block_on) begin
-                    for (int i = 0; i < num_cols*num_rows; i += 1) begin
-                        if (block_on[i]) begin
-                            if (i % 3 == 0)
-                                graph_rgb = 3'b001;
-                            else if(i % 3 == 1)
-                                graph_rgb = 3'b100;
-                            else
-                                graph_rgb = 3'b010;
-                        end                  
-                    end
-                end
             end
-        else if(bar_on)
-            graph_rgb = 3'b110;
-        else if(rd_ball_on)
-            graph_rgb = 3'b100;
-        end
+            
+        //end
 	end
 
 endmodule

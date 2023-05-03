@@ -2,26 +2,25 @@
 <GAO_CONFIG>
     <Version>3.0</Version>
     <Mode>Standard</Mode>
-    <AoCore index="0" sample_clock="sys_clk" trig_type="0" storage_depth="8192" window_num="1" capture_amount="8192" trigger_pos="0" module_name="top" force_trigger_by_falling_edge="false">
+    <AoCore index="0" sample_clock="graph_unit/clk" trig_type="0" storage_depth="8192" window_num="1" capture_amount="8192" trigger_pos="0" module_name="top" force_trigger_by_falling_edge="false">
         <SignalList>
-            <Signal>u_game_graph_top/vsync_unit/video_on</Signal>
-            <Bus name="u_game_graph_top/vsync_unit/v_count_reg[9:0]">
-                <Signal>u_game_graph_top/vsync_unit/v_count_reg[9]</Signal>
-                <Signal>u_game_graph_top/vsync_unit/v_count_reg[8]</Signal>
-                <Signal>u_game_graph_top/vsync_unit/v_count_reg[7]</Signal>
-                <Signal>u_game_graph_top/vsync_unit/v_count_reg[6]</Signal>
-                <Signal>u_game_graph_top/vsync_unit/v_count_reg[5]</Signal>
-                <Signal>u_game_graph_top/vsync_unit/v_count_reg[4]</Signal>
-                <Signal>u_game_graph_top/vsync_unit/v_count_reg[3]</Signal>
-                <Signal>u_game_graph_top/vsync_unit/v_count_reg[2]</Signal>
-                <Signal>u_game_graph_top/vsync_unit/v_count_reg[1]</Signal>
-                <Signal>u_game_graph_top/vsync_unit/v_count_reg[0]</Signal>
+            <Bus name="graph_unit/pix_y[9:0]">
+                <Signal>graph_unit/pix_y[9]</Signal>
+                <Signal>graph_unit/pix_y[8]</Signal>
+                <Signal>graph_unit/pix_y[7]</Signal>
+                <Signal>graph_unit/pix_y[6]</Signal>
+                <Signal>graph_unit/pix_y[5]</Signal>
+                <Signal>graph_unit/pix_y[4]</Signal>
+                <Signal>graph_unit/pix_y[3]</Signal>
+                <Signal>graph_unit/pix_y[2]</Signal>
+                <Signal>graph_unit/pix_y[1]</Signal>
+                <Signal>graph_unit/pix_y[0]</Signal>
             </Bus>
         </SignalList>
         <Triggers>
             <Trigger index="0">
                 <SignalList>
-                    <Signal>sys_clk</Signal>
+                    <Signal>graph_unit/clk</Signal>
                 </SignalList>
             </Trigger>
             <Trigger index="1"/>
@@ -62,5 +61,5 @@
             <Expression>M0</Expression>
         </Expressions>
     </AoCore>
-    <GAO_ID>0000000110101101</GAO_ID>
+    <GAO_ID>1110000010100001</GAO_ID>
 </GAO_CONFIG>
