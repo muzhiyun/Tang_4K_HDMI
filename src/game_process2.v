@@ -35,7 +35,7 @@ reg [num_rows-1:0][num_cols-1:0] bricks;//检测砖块存在的数组
 
 
 //挡板定义
-parameter bar_x_size1 = 639;
+parameter bar_x_size1 = 630;
 parameter bar_x_size2 = 40;
 parameter bar_x_size3 = 30;
 parameter bar_y_b = 465;
@@ -195,7 +195,7 @@ end
 /////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////
 
-reg block_collision,block_horizontal_collision,block_vertical_collision,  left_wall_collision, right_wall_collision, top_wall_collision;
+reg block_collision,block_horizontal_collision,block_vertical_collision,  left_wall_collision, right_wall_collision, top_wall_collision, bottom_wall_collision;
 reg paddle_collision ;
 reg block_horizontal_collision, block_vertical_collision;
 reg block_up_collision, block_down_collision, block_left_collision, block_right_collision;
@@ -229,6 +229,7 @@ always @(posedge clk or negedge reset) begin
     left_wall_collision <= 0;
     right_wall_collision <= 0;
     top_wall_collision <= 0;
+    bottom_wall_collision <= 0;
 
     // Check for collisions with blocks
     for (int xi = 0; xi < num_rows; xi++) begin
@@ -237,18 +238,18 @@ always @(posedge clk or negedge reset) begin
             if (bricks[xi][xj]) begin
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                 if ((ball_x_next > xj * block_width) && (ball_x_next < (xj + 1) * block_width) && (ball_y_next > xi * block_height) && (ball_y_next < (xi + 1) * block_height)) begin
-                    if (ball_y_reg < xi * block_height  && ball_y_next + ball_size >= xi * block_height) begin
+                    if (ball_y_reg - ball_size < xi * block_height ) begin
                         block_up_collision <= 1;
                     end
-                    else if (ball_y_reg >= (xi + 1) * block_height && ball_y_next < (xi + 1) * block_height) begin
+                    else if (ball_y_reg >= (xi + 1) * block_height ) begin
                         block_down_collision <= 1;
                         
                     end
-                    else if (ball_x_reg < xj * block_width  && ball_x_next >= xj * block_width) begin
+                    else if (ball_x_reg - ball_size < xj * block_width ) begin
                         block_left_collision <= 1;
                         
                     end
-                    else if (ball_x_reg >= (xj + 1) * block_width && ball_x_next < (xj + 1) * block_width) begin
+                    else if (ball_x_reg >= (xj + 1) * block_width ) begin
                         block_right_collision <= 1;    
                     end
                     bricks[xi][xj] = 1'b0;
@@ -289,10 +290,15 @@ always @(posedge clk or negedge reset) begin
     left_wall_collision <= (ball_x_next <= 0);
     right_wall_collision <= (ball_x_next >= MAX_X - ball_size);
     top_wall_collision <= (ball_y_next <= 0);
+    bottom_wall_collision <= (ball_y_next >= MAX_Y - ball_size);
 
     // Set horizontal and vertical collision signals
     block_horizontal_collision <= block_left_collision | block_right_collision;
     block_vertical_collision <= block_up_collision | block_down_collision;
+    if (bottom_wall_collision) begin
+        //str <= 0;
+        move_state <= s0;
+    end
 
         case (move_state)
             s0: begin
