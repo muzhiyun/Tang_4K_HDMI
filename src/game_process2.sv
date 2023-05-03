@@ -14,17 +14,8 @@ module game_process2(
 parameter MAX_X = 640;
 parameter MAX_Y = 480;
 wire refr_tick;
-//砖块的大小定义
 
 
-wire [num_cols*num_rows-1:0]block_on;     //用于生成砖块像素的数组
-parameter block_width = 40;             //砖块规格
-parameter block_height = 30;            //
-parameter num_rows = 6;                 // 行
-parameter num_cols = 16;                //  列
-//parameter row = 6;
-//parameter col = 16;
-reg [num_rows-1:0][num_cols-1:0] bricks;//检测砖块存在的数组
 
 
 //logic any_collision = 0; // 标记是否有砖块被碰撞
@@ -101,22 +92,47 @@ assign refr_tick = (pix_y == 481)&&(pix_x == 0);
 //assign block_on[2] = (block2_x <= pix_x)&&(pix_x <= block2_x + length)&&(block_y+width >= pix_y)&&(pix_y >= block_y);
 
 
-genvar bi, bj;
+//genvar bi, bj;
 //reg [num_cols-1:0][num_rows-1:0] brick_numba;
-generate 
+//generate 
 
-  for ( bi = 0; bi < num_rows; bi=bi+1) begin
-    for ( bj = 0; bj < num_cols; bj=bj+1) begin
+ // for ( bi = 0; bi < num_rows; bi=bi+1) begin
+//    for ( bj = 0; bj < num_cols; bj=bj+1) begin
       //always @(posedge clk) begin
        // brick_numba[i][j] <= bricks[i][j];
       //  end
         //if(j*num_cols+i != 8)
-            assign block_on[(bi*num_cols)+bj] = bricks[bi][bj] && (bj*block_width < pix_x) && (pix_x < (bj+1)*block_width) && ( bi*block_height < pix_y ) && (pix_y < (bi+1)*block_height);
+//           if(bricks[bi][bj]==1'b1) begin
+//            assign block_on[(bi*num_cols)+bj] =  (bi*block_width < pix_x) && (pix_x < (bi+1)*block_width) && ( bj*block_height < pix_y ) && (pix_y < (bj+1)*block_height);
+//           end
         //else 
         //    assign block_on[8] = 1'b1;
-    end                         
-  end
-endgenerate
+//    end                         
+//  end
+//endgenerate
+
+//砖块的大小定义
+//reg [num_cols*num_rows-1:0]block_on;     //用于生成砖块像素的数组
+parameter block_width = 160;             //砖块规格
+parameter block_height = 30;            //
+parameter num_rows = 4;                 // 行
+parameter num_cols = 4;                //  列
+//parameter row = 6;
+//parameter col = 16;
+reg [num_cols-1:0][num_rows-1:0] bricks;//检测砖块存在的数组
+reg [num_cols*num_rows-1:0]block_on;     //用于生成砖块像素的数组
+integer xi, xj;
+always @(posedge clk) begin
+    for (xi = 0; xi < num_rows; xi = xi + 1) begin
+        for (xj = 0; xj < num_cols; xj = xj + 1) begin
+            if ((xi * block_width < pix_x) && (pix_x < (xi + 1) * block_width)
+                && (xj * block_height < pix_y) && (pix_y < (xj + 1) * block_height))
+                block_on[(num_cols * xi) + xj] <= bricks[xi][xj];
+            else
+                block_on[(num_cols * xi) + xj] <= 1'b0;
+        end
+    end
+end
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 //棒显示

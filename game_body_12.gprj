@@ -16,6 +16,7 @@
         <File path="src/game_graph_top.v" type="file.verilog" enable="0"/>
         <File path="src/game_graph_top_test.v" type="file.verilog" enable="0"/>
         <File path="src/game_process.v" type="file.verilog" enable="0"/>
+        <File path="src/game_process2.sv" type="file.verilog" enable="0"/>
         <File path="src/game_process2.v" type="file.verilog" enable="1"/>
         <File path="src/gowin_clkdiv/gowin_clkdiv.v" type="file.verilog" enable="1"/>
         <File path="src/gowin_empu/gowin_empu.v" type="file.verilog" enable="1"/>
@@ -35,6 +36,7 @@
         <File path="src/vendor_specific_infoframe.sv" type="file.verilog" enable="1"/>
         <File path="src/vga_sync.v" type="file.verilog" enable="0"/>
         <File path="src/4k_HDMI.cst" type="file.cst" enable="1"/>
+        <File path="src/02_FPGA.rao" type="file.gao" enable="0"/>
         <File path="src/game_body_12.rao" type="file.gao" enable="0"/>
     </FileList>
 </Project>
