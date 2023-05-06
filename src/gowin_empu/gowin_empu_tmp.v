@@ -4,7 +4,7 @@
 //GOWIN Version: GowinSynthesis V1.9.8.09 Education
 //Part Number: GW1NSR-LV4CQN48PC6/I5
 //Device: GW1NSR-4C
-//Created Time: Thu Apr 13 23:01:54 2023
+//Created Time: Sat May 06 22:06:59 2023
 
 //Change the instance name and port connections to the signal names
 //--------Copy here to design--------
