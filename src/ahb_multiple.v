@@ -206,7 +206,7 @@ begin
             mbtn[1] <= Multiplicand[6] ;
             msw[0] <= Multiplicand[5] ;        //挡板长度选择
             msw[1] <= Multiplicand[4] ;
-            mstr    <= Multiplier[7] ;       //暂停开始键
+            mstr    <= 1'b1; //modfiy for pattern_generator Multiplier[7] ;       //暂停开始键
             mimg    <= Multiplier[6] ;       //Menu/Game显示切换键
             isDone <= 1'b1;
 
@@ -250,6 +250,6 @@ assign Done_Sig = isDone;
 assign Product  = isNeg?(~Temp + 1'b1):Temp;
 assign u_btn = mbtn;
 assign u_str = mstr;
-assign u_img = mimg;
+assign u_img = 1'b1; //modfiy for pattern_generator mimg;
 assign u_sw = msw;
 endmodule

@@ -3,4 +3,4 @@ impl/pnr/*
 impl/gwsynthesis/*
 impl/temp/*
 src/gowin_empu/temp/*
-!impl/pnr/game_body_12.fs
+!impl/pnr/pattern_generator.fs
